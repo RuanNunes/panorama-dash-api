@@ -1,2 +1,74 @@
 greeting:
   message: "hello"
+
+# Scraper Configuration
+# WARNING: Web scraping may violate Terms of Service of target websites.
+# Consider using official APIs for production use.
+scraper:
+  # Cron expression for scheduled scraping (default: every 5 minutes)
+  schedule: "0 */5 * * * ?"
+  # Connection timeout for HTTP requests
+  connection-timeout: 10s
+  # Read timeout for HTTP requests
+  read-timeout: 30s
+  # User agent for HTTP requests
+  user-agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  # Maximum retry attempts for failed requests
+  max-retries: 3
+  # Initial backoff duration for exponential retry
+  retry-backoff: 1s
+  # Cache TTL (time to live)
+  cache-ttl: 10m
+  # Enable/disable the scraper
+  enabled: true
+  # Optional: specific symbols to scrape
+  # symbols:
+  #   - "IBOV:INDEXBVMF"
+  #   - "USD/BRL"
+  #   - "BTC/USD"
+
+# Quarkus Configuration
+quarkus:
+  application:
+    name: panorama-dash-api
+  http:
+    port: 8080
+  
+  # OpenAPI / Swagger UI
+  smallrye-openapi:
+    info-title: Panorama Dash API
+    info-version: 1.0.0
+    info-description: |
+      Financial indicators API with scheduled web scraping.
+      
+      **Compliance Notice:**
+      - This API may scrape data from third-party websites
+      - Ensure compliance with target websites' Terms of Service
+      - Consider using official APIs for production use
+  swagger-ui:
+    always-include: true
+    path: /swagger-ui
+  
+  # Micrometer / Prometheus metrics
+  micrometer:
+    export:
+      prometheus:
+        enabled: true
+        path: /q/metrics
+
+# Logging Configuration
+"%dev":
+  quarkus:
+    log:
+      level: INFO
+      category:
+        "mp.invest":
+          level: DEBUG
+
+"%prod":
+  quarkus:
+    log:
+      level: WARN
+      category:
+        "mp.invest":
+          level: INFO
